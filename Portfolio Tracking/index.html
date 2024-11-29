@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body class="bg-gray-50">
+    <div id="login-section" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-bold mb-6">Login to Portfolio Tracker</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full mb-4 p-2 border rounded">
+            <input type="password" id="password" placeholder="Password" class="w-full mb-4 p-2 border rounded">
+            <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Login</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="text-xl font-bold">Portfolio Tracker</div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showAddModal()" class="bg-blue-600 text-white px-4 py-2 rounded">Add Holdings</button>
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/40" class="rounded-full cursor-pointer" onclick="toggleProfileMenu()">
+                            <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-8">
+            <!-- Portfolio Summary -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-gray-500 text-sm">Total Portfolio Value</h3>
+                    <p class="text-2xl font-bold">$124,567.89</p>
+                    <p class="text-green-500">+2.4% <span class="text-gray-500 text-sm">today</span></p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-gray-500 text-sm">Total P&L</h3>
+                    <p class="text-2xl font-bold text-green-500">+$12,345.67</p>
+                    <p class="text-green-500">+15.3% <span class="text-gray-500 text-sm">all time</span></p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-gray-500 text-sm">Total Holdings</h3>
+                    <p class="text-2xl font-bold">25</p>
+                    <p class="text-gray-500 text-sm">Across 5 markets</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-gray-500 text-sm">Market Status</h3>
+                    <p class="text-2xl font-bold text-green-500">Open</p>
+                    <p class="text-gray-500 text-sm">NYSE, NSE Active</p>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Portfolio Allocation</h3>
+                    <canvas id="allocationChart"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Performance Chart</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Holdings Table -->
+            <div class="bg-white rounded-lg shadow mb-8">
+                <div class="p-4 border-b">
+                    <h3 class="text-lg font-semibold">Your Holdings</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Price</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Price</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">P&L</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="holdings-table" class="divide-y divide-gray-200">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- News & Community Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-semibold">Market News</h3>
+                    </div>
+                    <div id="news-feed" class="p-4 space-y-4">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-semibold">Community Chat</h3>
+                    </div>
+                    <div id="chat-messages" class="p-4 h-64 overflow-y-auto space-y-4">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                    <div class="p-4 border-t">
+                        <div class="flex space-x-2">
+                            <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 p-2 border rounded">
+                            <button onclick="sendMessage()" class="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Holdings Modal -->
+    <div id="add-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Add New Holding</h3>
+                <div class="space-y-4">
+                    <select id="market-type" class="w-full p-2 border rounded">
+                        <option value="stocks">Stocks</option>
+                        <option value="crypto">Crypto</option>
+                        <option value="forex">Forex</option>
+                        <option value="commodities">Commodities</option>
+                    </select>
+                    <input type="text" id="symbol" placeholder="Symbol" class="w-full p-2 border rounded">
+                    <input type="number" id="quantity" placeholder="Quantity" class="w-full p-2 border rounded">
+                    <input type="number" id="price" placeholder="Purchase Price" class="w-full p-2 border rounded">
+                    <div class="flex justify-end space-x-2">
+                        <button onclick="closeAddModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded">Cancel</button>
+                        <button onclick="addHolding()" class="px-4 py-2 bg-blue-600 text-white rounded">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./script.js"></script>
+
+
+</body>
+</html>
