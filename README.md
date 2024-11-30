@@ -1,3 +1,4 @@
+
 Portfolio Tracker is a web application designed to help users monitor their investment portfolios across various markets, including stocks, crypto, forex, and commodities. The application allows users to manage their holdings, view performance charts, track market news, and engage in community chats.
 
 This project is built with HTML, CSS (using Tailwind CSS), JavaScript, and the Chart.js library for visualization. It also integrates with APIs for data management and news fetching.
@@ -106,4 +107,6 @@ Community Chat
 
 Participate in discussions in the chat section.
 
-
+![WhatsApp Image 2024-11-30 at 09 10 06_b656a19e](https://github.com/user-attachments/assets/53a51d58-b75a-4c15-b5ba-9bc3fff584ac)
+![WhatsApp Image 2024-11-30 at 09 10 10_a7b2392f](https://github.com/user-attachments/assets/0f7b4e2c-45d5-4bde-a1ad-732d655c5a0c)
+![WhatsApp Image 2024-11-30 at 09 10 16_bbf1e645](https://github.com/user-attachments/assets/c8679776-30b6-441a-9863-38d12209177f)
